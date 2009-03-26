@@ -1,0 +1,2 @@
+module Admin::ProductOptionValuesHelper
+end

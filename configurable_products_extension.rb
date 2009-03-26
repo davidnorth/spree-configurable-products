@@ -13,6 +13,12 @@ class ConfigurableProductsExtension < Spree::Extension
   # end
   
   def activate
-    # admin.tabs.add "Configurable Products", "/admin/configurable_products", :after => "Layouts", :visibility => [:all]
+    
+    LineItem.class_eval do
+      
+      has_and_belongs_to_many :product_option_values
+      
+    end
+
   end
 end
