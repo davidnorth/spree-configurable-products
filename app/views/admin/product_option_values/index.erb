@@ -1,0 +1,27 @@
+<%= render :partial => 'admin/shared/product_sub_menu' %>
+
+<%= render :partial => 'admin/shared/product_tabs', :locals => {:current => "Product Option Values"} %>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t("property") %></th>
+      <th><%= t("value") %></th>
+      <th><%= t("price_difference") %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="product_properties">
+    <% for product_option_value in @product.product_option_values %>
+		<tr>
+		  <td><%= product_option_value.option_value.option.presentation %></td>
+		  <td><%= product_option_value.option_value.presentation %></td>
+      <td><%= product_option_value.price_difference %></td>
+		  <td class="actions"></td>
+		</tr>
+    <% end %>
+		<tr id="none">
+		  <td colspan="4"><%= @product.product_option_values.empty? ? "#{t("none")}." : "" %></td>
+		</tr>
+	</tbody>
+</table>

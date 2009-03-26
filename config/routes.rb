@@ -1,5 +1,7 @@
-# Put your extension routes here.
+map.namespace :admin do |admin|
 
-# map.namespace :admin do |admin|
-#   admin.resources :whatever
-# end  
+  admin.resources :products do |product|
+    product.resources :product_option_values
+  end
+
+end

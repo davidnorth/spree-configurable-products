@@ -14,6 +14,10 @@ class ConfigurableProductsExtension < Spree::Extension
   
   def activate
     
+    Product.class_eval do
+      has_many :product_option_values
+    end
+    
     LineItem.class_eval do
       
       has_and_belongs_to_many :product_option_values
