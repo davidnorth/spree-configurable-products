@@ -12,12 +12,12 @@
     </tr>
   </thead>
   <tbody id="product_properties">
-    <% for product_option_value in @product.product_option_values %>
+    <% for product_option_value in collection %>
 		<tr>
-		  <td><%= product_option_value.option_value.option.presentation %></td>
+		  <td><%= product_option_value.option_value.option_type.presentation %></td>
 		  <td><%= product_option_value.option_value.presentation %></td>
       <td><%= product_option_value.price_difference %></td>
-		  <td class="actions"></td>
+		  <td class="actions"><%= link_to_delete product_option_value %></td>
 		</tr>
     <% end %>
 		<tr id="none">
@@ -26,7 +26,8 @@
 	</tbody>
 </table>
 
-<% form_for :product_option_value do |f| %>
+<% form_for :product_option_value, :url => collection_url do |f| %>
+<%= error_messages_for :product_option_value %>
 <fieldset>
   <legend>Add an option value</legend>
   <label for="">Option</label>

@@ -7,4 +7,6 @@ class ProductOptionValue < ActiveRecord::Base
   belongs_to :option_value
   has_and_belongs_to_many :line_items
   
+  validates_presence_of :price_difference, :product, :option_value
+  
 end
