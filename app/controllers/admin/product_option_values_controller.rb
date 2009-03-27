@@ -30,8 +30,7 @@ class Admin::ProductOptionValuesController < Admin::BaseController
   private
   
   def collection
-    properties = end_of_association_chain.find(:all, :include => {:option_value => :option_type})
-    properties.sort_by {|p| p.option_value.option_type.presentation }
+    end_of_association_chain.find(:all, :include => {:option_value => :option_type}, :order => 'option_types.presentation, option_values.name')
   end
   
 
