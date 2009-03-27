@@ -25,7 +25,8 @@ class ConfigurableProductsExtension < Spree::Extension
     end
         
     Product.class_eval do
-      has_many :product_option_values
+      has_many :product_option_values, :include => {:option_value => :option_type}, :order => 'option_types.presentation, option_values.name'
+      accepts_nested_attributes_for :product_option_values, :allow_destroy => true
     end
     
     LineItem.class_eval do

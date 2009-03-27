@@ -2,6 +2,9 @@
 
 <%= render :partial => 'admin/shared/product_tabs', :locals => {:current => "Product option values"} %>
 
+<%= error_messages_for :product %>
+
+<% form_for @product, :url => update_all_admin_product_product_option_values_path(@product) do |product_form| %>
 <table class="index">
   <thead>
     <tr>
@@ -12,19 +15,27 @@
     </tr>
   </thead>
   <tbody id="product_properties">
-    <% for product_option_value in collection %>
+    <% product_form.fields_for :product_option_values do |f| %>
 		<tr>
-		  <td><%= product_option_value.option_value.option_type.presentation %></td>
-		  <td><%= product_option_value.option_value.presentation %></td>
-      <td><%= product_option_value.price_difference %></td>
-		  <td class="actions"><%= link_to_delete product_option_value %></td>
+		  <td><%= f.object.option_value.option_type.presentation %></td>
+		  <td><%= f.object.option_value.presentation %></td>
+      <td><%= f.text_field :price_difference, :size => 6 %></td>
+      <td class="actions">
+        <label><%= f.check_box :_delete %> Remove</label>
+      </td>
 		</tr>
     <% end %>
+    <% if collection.empty? %>
 		<tr id="none">
-		  <td colspan="4"><%= @product.product_option_values.empty? ? "#{t("none")}." : "" %></td>
+		  <td colspan="4"><%= t("none") %></td>
 		</tr>
+		<% end %>
 	</tbody>
 </table>
+<p>
+  <button><span><%= t("update") %></span></button>
+</p>
+<% end %>
 
 <% form_for :product_option_value, :url => collection_url do |f| %>
 <%= error_messages_for :product_option_value %>

@@ -26,12 +26,16 @@ class Admin::ProductOptionValuesController < Admin::BaseController
       wants.js { render :text => @data.to_json }
     end
   end
-
-  private
   
-  def collection
-    end_of_association_chain.find(:all, :include => {:option_value => :option_type}, :order => 'option_types.presentation, option_values.name')
+  def update_all
+    @product = parent_object
+    @product.attributes = params[:product]
+    if @product.save
+      flash[:notice] = "Properties updated"
+    else
+      flash[:error] = "Failed to update properties"
+    end
+    redirect_to collection_url
   end
-  
 
 end
