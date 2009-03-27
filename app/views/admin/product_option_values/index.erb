@@ -1,6 +1,6 @@
 <%= render :partial => 'admin/shared/product_sub_menu' %>
 
-<%= render :partial => 'admin/shared/product_tabs', :locals => {:current => "Product Option Values"} %>
+<%= render :partial => 'admin/shared/product_tabs', :locals => {:current => "Product option values"} %>
 
 <table class="index">
   <thead>
@@ -25,3 +25,27 @@
 		</tr>
 	</tbody>
 </table>
+
+<% form_for :product_option_value do |f| %>
+<fieldset>
+  <legend>Add an option value</legend>
+  <label for="">Option</label>
+  <%= select_tag(:option_type_id, '<option></option>' + options_from_collection_for_select(@product.option_types, :id, :presentation)) %>
+  &nbsp;
+  <label for="">Value</label>
+  <%= f.select :option_value_id, [], {}, :style => 'width:100px' %>
+  &nbsp;
+  <label for="">Price difference</label>
+  <%= f.text_field :price_difference, :size => 6 %>
+  &nbsp;
+  <input type="submit" value="Add" />
+</fieldset>
+<% end %>
+
+
+<% content_for :head do %>
+  <script type="text/javascript">
+  option_values_url = "<%= values_for_select_admin_product_product_option_values_url(@product) %>";
+  </script>
+  <%= javascript_include_tag 'admin/select-chain', 'admin/configurable-products' %>
+<% end %>

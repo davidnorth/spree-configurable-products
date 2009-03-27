@@ -13,7 +13,17 @@ class ConfigurableProductsExtension < Spree::Extension
   # end
   
   def activate
-    
+
+    # register Accessories product tab
+    Admin::BaseController.class_eval do
+      before_filter :add_accessories_tab
+      
+      private
+      def add_accessories_tab
+        @product_admin_tabs << {:name => t('product_option_values'), :url => "admin_product_product_option_values_url"}
+      end
+    end
+        
     Product.class_eval do
       has_many :product_option_values
     end
