@@ -30,9 +30,11 @@ class ConfigurableProductsExtension < Spree::Extension
     end
     
     LineItem.class_eval do
-      
       has_and_belongs_to_many :product_option_values
-      
+    end
+        
+    ProductsController.class_eval do
+      helper :product_configuration
     end
 
   end

@@ -8,5 +8,9 @@ class ProductOptionValue < ActiveRecord::Base
   has_and_belongs_to_many :line_items
   
   validates_presence_of :price_difference, :product, :option_value
-  
+
+  named_scope :for_option_type, lambda {|option_type| { :include => :option_value, :conditions => {'option_values.option_type_id' => option_type.id} } }
+
+  delegate :name, :presentation, :to => :option_value
+
 end
