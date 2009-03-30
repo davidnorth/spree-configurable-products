@@ -1,23 +1,35 @@
-<% if product_price(@product) %>
-<p class="prices">
-  <%= t("price") %>
-  <span class="price selling"><%= product_price(@product) %></span>
-</p>
-<% end %>
+<% form_for :order, :url => orders_url, :html => {:id => 'cart-form'} do |f| %>
 
-<h3>Configure your product</h3>
+  <% if product_price(@product) %>
+  <p class="prices" id="master_price">
+    <%= t("price") %>
+    <span class="price selling"><%= product_price(@product) %></span>
+  </p>
+  <% end %>
 
-<% for option_type in @product.option_types %>
-<p>
-  <label><%= option_type.presentation %></label><br />
-  <%= product_configuration_select option_type %>
-</p>
-<% end %>
+  <h3>Configure your product</h3>
 
-<p><%=
+  <% for option_type in @product.option_types %>
+  <p>
+    <label><%= option_type.presentation %></label><br />
+    <%= product_configuration_select option_type %>
+  </p>
+  <% end %>
+
+  <p><%=
   if @product.has_stock? || Spree::Config[:allow_backorders]
     submit_tag t('add_to_cart')
   else
     content_tag('strong', t('out_of_stock'))
   end
-%></p>
+  %></p>
+
+
+  <% content_for :head do %>
+    <% javascript_tag do %>
+      update_configuration_price_url = "<%= escape_javascript update_configuration_price_product_path(@product) %>";
+    <% end %>
+    <%= javascript_include_tag 'product-configuration' %>
+  <% end %>
+
+<% end %>

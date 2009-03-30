@@ -25,7 +25,7 @@ class ConfigurableProductsExtension < Spree::Extension
     end
         
     Product.class_eval do
-      has_many :product_option_values, :include => {:option_value => :option_type}, :order => 'option_types.presentation, option_values.name'
+      has_many :product_option_values, :include => {:option_value => :option_type}, :order => 'option_types.presentation, price_difference'
       accepts_nested_attributes_for :product_option_values, :allow_destroy => true
     end
     
@@ -35,6 +35,13 @@ class ConfigurableProductsExtension < Spree::Extension
         
     ProductsController.class_eval do
       helper :product_configuration
+      
+      def update_configuration_price
+        product_option_values = object.product_option_values.find(params[:configuration])
+        @new_price = object.master_price + product_option_values.sum(&:price_difference)
+        render :action => 'update_configuration_price', :layout => false
+      end
+      
     end
 
   end

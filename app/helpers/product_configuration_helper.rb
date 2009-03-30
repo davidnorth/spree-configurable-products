@@ -2,7 +2,7 @@ module ProductConfigurationHelper
 
 
   def product_configuration_select(option_type)
-    select_tag "configuration[#{option_type.id}]", options_for_select(formatted_product_option_values_for_select(option_type))
+    select_tag "configuration[]", options_for_select(formatted_product_option_values_for_select(option_type))
   end
 
   def formatted_product_option_values_for_select(option_type)
@@ -19,7 +19,7 @@ module ProductConfigurationHelper
     else
       prefix = '-'
     end
-    "(#{prefix} #{format_price(value)})"
+    "(#{prefix}#{format_price(value)})"
   end
   
 
