@@ -7,14 +7,26 @@
   </p>
   <% end %>
 
-  <h3>Configure your product</h3>
 
-  <% for option_type in @product.option_types %>
-  <p>
-    <label><%= option_type.presentation %></label><br />
-    <%= product_configuration_select option_type %>
-  </p>
+  <% if @product.option_types.any? %>
+    <h3>Configure your product</h3>
+
+    <% for option_type in @product.option_types %>
+    <p>
+      <label><%= option_type.presentation %></label><br />
+      <%= product_configuration_select option_type %>
+    </p>
+    <% end %>
+
+    <% content_for :head do %>
+      <% javascript_tag do %>
+        update_configuration_price_url = "<%= escape_javascript update_configuration_price_product_path(@product) %>";
+      <% end %>
+      <%= javascript_include_tag 'product-configuration' %>
+    <% end %>
+    
   <% end %>
+
 
   <p><%=
   if @product.has_stock? || Spree::Config[:allow_backorders]
@@ -25,11 +37,6 @@
   %></p>
 
 
-  <% content_for :head do %>
-    <% javascript_tag do %>
-      update_configuration_price_url = "<%= escape_javascript update_configuration_price_product_path(@product) %>";
-    <% end %>
-    <%= javascript_include_tag 'product-configuration' %>
-  <% end %>
+
 
 <% end %>
