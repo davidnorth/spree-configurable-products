@@ -1,0 +1,9 @@
+product_with_option_values:
+  name: Product with option values
+  master_price: 10.00
+  description: Description of product
+product_with_no_option_values:
+  name: Product with no option values
+  master_price: 10.00
+  description: Description of product
+  

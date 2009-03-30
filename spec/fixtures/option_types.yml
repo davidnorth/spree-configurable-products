@@ -1,0 +1,6 @@
+size_option_type:
+  name: size
+  presentation: Size
+color_option_type:
+  name: color
+  presentation: Color

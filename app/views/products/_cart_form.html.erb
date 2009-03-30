@@ -10,6 +10,11 @@
 
   <% if @product.option_types.any? %>
     <h3>Configure your product</h3>
+    
+    <p>
+      <strong>Basic price</strong>
+      <%= format_price @product.master_price %>
+    </p>
 
     <% for option_type in @product.option_types %>
     <p>

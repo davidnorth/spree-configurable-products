@@ -1,0 +1,16 @@
+small_is_free:
+  product: product_with_option_values
+  option_value: small_option_value
+  price_difference: 0.0
+large_is_five_pounds:
+  product: product_with_option_values
+  option_value: large_option_value
+  price_difference: 5.0
+red_is_free:
+  product: product_with_option_values
+  option_value: red_option_value
+  price_difference: 0.0
+blue_is_two_pounds:
+  product: product_with_option_values
+  option_value: blue_option_value
+  price_difference: 2.0

@@ -1,0 +1,16 @@
+small_option_value:
+  option_type: size_option_type
+  name: small
+  presentation: Small
+large_option_value:
+  option_type: size_option_type
+  name: large
+  presentation: Large
+red_option_value:
+  option_type: color_option_type
+  name: red
+  presentation: Red
+blue_option_value:
+  option_type: color_option_type
+  name: blue
+  presentation: Blue
