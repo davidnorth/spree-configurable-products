@@ -25,8 +25,20 @@ class ConfigurableProductsExtension < Spree::Extension
     end
         
     Product.class_eval do
-      has_many :product_option_values, :include => {:option_value => :option_type}, :order => 'option_types.presentation, price_difference'
+      has_many :product_option_values, :include => :option_value, :order => 'option_values.option_type_id, price_difference'
       accepts_nested_attributes_for :product_option_values, :allow_destroy => true
+      
+      def cheapest_product_option_values
+        product_option_values.find(:all, :group => 'option_values.option_type_id', :order => 'price_difference DESC')
+      end
+
+      def calculate_price_from
+        sql = "SELECT MIN(price_difference) AS price_difference FROM product_option_values 
+        INNER JOIN option_values ON option_values.id = product_option_values.option_value_id
+        GROUP BY option_type_id"
+        master_price + connection.select_all(sql).map{|r| r["price_difference"].to_f}.sum
+      end
+      
     end
     
     LineItem.class_eval do
