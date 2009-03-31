@@ -22,6 +22,7 @@ describe Order do
     OrderMailer.stub!(:deliver_confirm).with(any_args)   
     OrderMailer.stub!(:deliver_cancel).with(any_args)    
   end
+  
 
   describe "add_variant" do
 
@@ -73,6 +74,48 @@ describe Order do
       @order.line_items.size.should == 1
     end
     
+    it "should increment quantity of existing line item if product configuration is the same" do
+      @product = products(:product_with_option_values)
+
+      product_option_values = [
+        product_option_values(:large_is_five_pounds),
+        product_option_values(:red_is_one_pound)
+      ]
+      @variant2 = mock_model(Variant, :id => 5678, :on_hand => 10, :product => @product, :price => 10.00)
+      @order.line_items.size.should == 1
+      @order.add_variant(@variant2, 1, product_option_values)
+      @order.line_items.size.should == 2
+      
+      @order.add_variant(@variant2, 2, product_option_values)
+      @order.line_items.size.should == 2
+
+      
+      new_line_item = @order.line_items.detect{|li| li.variant_id ==  @variant2.id}
+      new_line_item.quantity.should == 3
+
+    end
+
+    it "should create a new line item for same variant if configuration is different" do
+      @product = products(:product_with_option_values)
+
+      product_option_values = [
+        product_option_values(:large_is_five_pounds),
+        product_option_values(:red_is_one_pound)
+      ]
+      @variant2 = mock_model(Variant, :id => 5678, :on_hand => 10, :product => @product, :price => 10.00)
+      @order.line_items.size.should == 1
+      @order.add_variant(@variant2, 1, product_option_values)
+      @order.line_items.size.should == 2
+      
+      product_option_values = [
+        product_option_values(:small_is_free),
+        product_option_values(:red_is_one_pound)
+      ]
+      @order.add_variant(@variant2, 2, product_option_values)
+      @order.line_items.size.should == 3
+
+      
+    end
 
   end
 

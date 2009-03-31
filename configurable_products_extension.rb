@@ -80,12 +80,28 @@ class ConfigurableProductsExtension < Spree::Extension
       # Override this method to allow configuration to be stored and 
       # so that a new line item is added each time even for the same product
       def add_variant(variant, quantity=1, product_option_values = [])
-        total_price = variant.price + product_option_values.sum(&:price_difference)
-        current_item = LineItem.new(:quantity => quantity, :variant => variant, :price => total_price)
-        current_item.product_option_values = product_option_values
-        return nil unless current_item.save
-        self.line_items << current_item
+        if current_item = contains?(variant, product_option_values)
+          current_item.increment_quantity unless quantity > 1
+          current_item.quantity = (current_item.quantity + quantity) if quantity > 1
+          current_item.save
+        else
+          total_price = variant.price + product_option_values.sum(&:price_difference)
+          current_item = LineItem.new(:quantity => quantity, :variant => variant, :price => total_price)
+          current_item.product_option_values = product_option_values
+          return nil unless current_item.save
+          self.line_items << current_item
+        end
         current_item
+      end
+      
+      # Override to check if a variant exists in order with the same product configuration
+      def contains?(variant, product_option_values = [])
+        puts 'checking contains?'
+        line_items.select do |line_item|
+          puts "Line item #{line_item.inspect}"
+          puts "Line item #{line_item.product_option_values.map(&:id).sort} == #{product_option_values.map(&:id).sort}"
+          line_item.variant == variant and line_item.product_option_values.map(&:id).sort == product_option_values.map(&:id).sort
+        end.first
       end
       
     end
