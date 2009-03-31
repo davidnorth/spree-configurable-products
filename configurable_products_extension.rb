@@ -96,14 +96,23 @@ class ConfigurableProductsExtension < Spree::Extension
       
       # Override to check if a variant exists in order with the same product configuration
       def contains?(variant, product_option_values = [])
-        puts 'checking contains?'
         line_items.select do |line_item|
-          puts "Line item #{line_item.inspect}"
-          puts "Line item #{line_item.product_option_values.map(&:id).sort} == #{product_option_values.map(&:id).sort}"
           line_item.variant == variant and line_item.product_option_values.map(&:id).sort == product_option_values.map(&:id).sort
         end.first
       end
       
+    end
+    
+    OrdersController.class_eval do
+      create.after do
+        @product = Product.find(params[:product_id])
+        @quantity = params[:quantity] ? params[:quantity].to_i : 1
+        @product_option_values = params[:configuration] ? @product.product_option_values.find(params[:configuration]) : []
+
+        @order.add_variant(@product.variant, @quantity, @product_option_values)
+
+        @order.save
+      end
     end
     
     ProductsController.class_eval do
