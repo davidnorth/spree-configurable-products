@@ -73,6 +73,10 @@ class ConfigurableProductsExtension < Spree::Extension
         end
       end
       
+      def configuration_description
+        product_option_values.map {|pov| "#{pov.option_value.option_type.presentation}:#{pov.option_value.presentation}" }.join(', ')
+      end
+      
     end
     
     Order.class_eval do
