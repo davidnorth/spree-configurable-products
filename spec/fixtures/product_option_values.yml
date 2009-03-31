@@ -14,3 +14,7 @@ blue_is_two_pounds:
   product: product_with_option_values
   option_value: blue_option_value
   price_difference: 2.0
+large_is_free_for_some_other_product:
+  product: some_other_product
+  option_value: large_option_value
+  price_difference: 0.0

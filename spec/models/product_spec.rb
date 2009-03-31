@@ -17,5 +17,13 @@ describe Product do
     product.save
     product.price_from.to_f.should == 11.0
   end
+  
+  it "should find correct configurable option types" do
+    configurable_option_types = products(:product_with_option_values).configurable_option_types
+    
+    configurable_option_types.length.should == 2    
+    configurable_option_types.should include(option_types(:size_option_type))
+    configurable_option_types.should include(option_types(:color_option_type))
+  end
 
 end

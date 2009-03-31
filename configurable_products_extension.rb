@@ -45,12 +45,51 @@ class ConfigurableProductsExtension < Spree::Extension
         self.price_from = calculate_price_from
       end
 
+      # Option types that a product option value has been added for
+      def configurable_option_types
+        product_option_values.map{|pov| pov.option_value.option_type}.uniq
+      end
+      
     end
     
     LineItem.class_eval do
       has_and_belongs_to_many :product_option_values
+
+      validate :must_have_one_product_option_value_for_each_available_type
+      validate :all_product_option_values_must_belong_to_product
+      
+      
+      def must_have_one_product_option_value_for_each_available_type
+        option_type_ids = product_option_values.map{|pov| pov.option_value.option_type_id}
+        product_option_type_ids = variant.product.configurable_option_types.map(&:id)
+        unless option_type_ids.sort == product_option_type_ids.sort
+          errors.add(:product_option_values, "Incorrect product configuration, not all required options were selected")
+        end
+      end
+      
+      def all_product_option_values_must_belong_to_product
+        unless product_option_values.all?{|pov| pov.product == variant.product}
+          errors.add(:product_option_values, "Incorrect product configuration, invalid option selected")
+        end
+      end
+      
     end
-        
+    
+    Order.class_eval do
+
+      # Override this method to allow configuration to be stored and 
+      # so that a new line item is added each time even for the same product
+      def add_variant(variant, quantity=1, product_option_values = [])
+        total_price = variant.price + product_option_values.sum(&:price_difference)
+        current_item = LineItem.new(:quantity => quantity, :variant => variant, :price => total_price)
+        current_item.product_option_values = product_option_values
+        return nil unless current_item.save
+        self.line_items << current_item
+        current_item
+      end
+      
+    end
+    
     ProductsController.class_eval do
       helper :product_configuration
       
