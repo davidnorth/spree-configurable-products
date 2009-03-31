@@ -33,6 +33,15 @@ describe Order do
       @order.line_items.size.should == 2
     end
     
+    it "should change quantity if variant already exists in order for product with no option values" do
+      @variant2 = mock_model(Variant, :id => "5678", :on_hand => 10, :product => products(:product_with_no_option_values), :price => 9.99)      
+      @order.line_items.size.should == 1
+      @order.add_variant(@variant2)
+      @order.line_items.size.should == 2
+      @order.add_variant(@variant2)
+      @order.line_items.size.should == 2
+    end
+
     it "should store product option values in line item and calculate correct price" do
       @product = products(:product_with_option_values)
       product_option_values = [
