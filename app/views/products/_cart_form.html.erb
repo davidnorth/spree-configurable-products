@@ -1,5 +1,7 @@
 <% form_for :order, :url => orders_url, :html => {:id => 'cart-form'} do |f| %>
 
+  <%= hidden_field_tag :product_id, @product.id %>
+
   <% if product_price(@product) %>
   <p class="prices" id="master_price">
     <%= t("price") %>

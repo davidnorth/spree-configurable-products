@@ -108,9 +108,7 @@ class ConfigurableProductsExtension < Spree::Extension
         @product = Product.find(params[:product_id])
         @quantity = params[:quantity] ? params[:quantity].to_i : 1
         @product_option_values = params[:configuration] ? @product.product_option_values.find(params[:configuration]) : []
-
-        @order.add_variant(@product.variant, @quantity, @product_option_values)
-
+        @order.add_variant(@product.variants.active.first, @quantity, @product_option_values)
         @order.save
       end
     end
