@@ -39,6 +39,12 @@ class ConfigurableProductsExtension < Spree::Extension
         master_price + connection.select_all(sql).map{|r| r["price_difference"].to_f}.sum
       end
       
+      before_save :store_price_from
+      
+      def store_price_from
+        self.price_from = calculate_price_from
+      end
+
     end
     
     LineItem.class_eval do

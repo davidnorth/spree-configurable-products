@@ -12,5 +12,10 @@ describe Product do
     products(:product_with_option_values).calculate_price_from.should == 10.00
   end
 
+  it "should cache price from when saving" do
+    product = products(:product_with_option_values)
+    product.save
+    product.price_from.to_f.should == 11.0
+  end
 
 end
