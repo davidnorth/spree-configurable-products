@@ -10,6 +10,7 @@ class CreateProductOptionValues < ActiveRecord::Migration
     create_table :line_items_product_option_values do |t|
       t.integer :line_item_id, :product_option_value_id
     end
+    remove_column :line_items_product_option_values, :id
 
   end
 
