@@ -27,7 +27,7 @@ class ConfigurableProductsExtension < Spree::Extension
     Product.class_eval do
       has_many :product_option_values, :include => :option_value, :order => 'option_values.option_type_id, price_difference'
       accepts_nested_attributes_for :product_option_values, :allow_destroy => true
-      
+            
       def cheapest_product_option_values
         product_option_values.find(:all, :group => 'option_values.option_type_id', :order => 'price_difference DESC')
       end
@@ -83,7 +83,7 @@ class ConfigurableProductsExtension < Spree::Extension
 
       # Override this method to allow configuration to be stored and 
       # so that a new line item is added each time even for the same product
-      def add_variant(variant, quantity=1, product_option_values = [])
+      def add_variant(variant, quantity = 1, product_option_values = [])
         if current_item = contains?(variant, product_option_values)
           current_item.increment_quantity unless quantity > 1
           current_item.quantity = (current_item.quantity + quantity) if quantity > 1
